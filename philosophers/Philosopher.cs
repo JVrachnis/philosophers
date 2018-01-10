@@ -14,43 +14,41 @@ namespace philosophers
         const long maxEatTime = 20000;
 
         Stopwatch eatingStopWatch = new Stopwatch();
-        AverageTimeStopWatch waitStopWatch = new AverageTimeStopWatch();
-
-        public AverageTimeStopWatch StopWatchTime { get { return waitStopWatch; } }
         public Stopwatch EatingStopWatch { get { return eatingStopWatch; } }
+        AverageTimeStopWatch waitStopWatch = new AverageTimeStopWatch();
+        public AverageTimeStopWatch WaitStopWatch { get { return waitStopWatch; } }
+
+       
         int timeToEat;
-        public delegate void CallEat(Philosopher p);
-        CallEat callEat;
+        public delegate void CallAte(Philosopher p);
+        CallAte callAte;
         int id;
         public int ID { get { return id; } }
-        string name;
-        public string Name { get { return name; } }
-        private Thread philosopherThread;
         private bool ate = false;
         public bool Ate { get { return ate; } }
+        private Thread philosopherThread;
         public Thread PhilosopherThread { get { return philosopherThread; } }
-        public Philosopher(int id, string name, CallEat callEat)
+        public Philosopher(int id, CallAte callAte)
         {
-            this.callEat = callEat;
             this.id = id;
-            this.name = name;
+            this.callAte = callAte;
             this.timeToEat = 1000 * (id + 1);
             philosopherThread = new Thread(eating);
-            philosopherThread.Name = name;
+            philosopherThread.Name = "Philosopher " + id;
             waitStopWatch.Start();
             eatingStopWatch.Stop();
         }
         public bool canEat(bool[] forks)
         {
-            if ((forks[id] || forks[id % forks.Length]))
+            if ((forks[id] || forks[(id + 1) % forks.Length]))
             {
                 if (forks[id])
                 {
                     Console.WriteLine("philosopher: " + id + " FAILED to take fork: " + id + " at " + DateTime.Now.ToString("h:mm:ss tt"));
                 }
-                if (forks[id % forks.Length])
+                if (forks[(id+1) % forks.Length])
                 {
-                    Console.WriteLine("philosopher: " + id + " FAILED to take fork: " + (id % forks.Length) + " at " + DateTime.Now.ToString("h:mm:ss tt"));
+                    Console.WriteLine("philosopher: " + id + " FAILED to take fork: " + ((id + 1) % forks.Length) + " at " + DateTime.Now.ToString("h:mm:ss tt"));
                 }
                 return false;
             }
@@ -59,7 +57,7 @@ namespace philosophers
         public void startEating()
         {
             philosopherThread = new Thread(eating);
-            philosopherThread.Name = name;
+            philosopherThread.Name = "Philosopher " + id;
             philosopherThread.Start();
         }
         public void eating()
@@ -91,7 +89,7 @@ namespace philosophers
                 Console.WriteLine("philosopher: " + id + " ATE at " + DateTime.Now.ToString("h:mm:ss tt"));
                 ate = true;
             }
-            callEat(this);
+            callAte(this);
         }
     }
 }

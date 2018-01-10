@@ -14,7 +14,7 @@ namespace philosophers
         static private bool[] forks;
         static private ArrayList philosophersHungry;
         static private List<Philosopher> philosophersHungryRemove = new List<Philosopher>();
-        static private List<Philosopher> philosophers;
+        public List<Philosopher> philosophers;
         public DinnerTable(int PhilosophersCount)
         {
             philosophersHungry = new ArrayList();
@@ -22,7 +22,7 @@ namespace philosophers
             forks = new bool[PhilosophersCount];
             for (int i = 0; i < PhilosophersCount; i++)
             {
-                philosophers.Add(new Philosopher(i, "philo" + (i), philosopherStopedEating));
+                philosophers.Add(new Philosopher(i, philosopherStopedEating));
                 philosophersHungry.Add(philosophers.ElementAt(i));
             }
             FindNext();
@@ -53,7 +53,7 @@ namespace philosophers
         static private void setUseForks(Philosopher p, bool used)
         {
             forks[p.ID] = used;
-            forks[p.ID % forks.Length] = used;
+            forks[(p.ID+1) % forks.Length] = used;
         }
         static private void philosopherStopedEating(Philosopher p)
         {
@@ -82,17 +82,17 @@ namespace philosophers
             Console.WriteLine("average Thinking times: ");
             foreach (Philosopher p in philosophers)
             {
-                Console.WriteLine(p.Name + ": " + p.StopWatchTime.AverageElapsed);
+                Console.WriteLine("Philosophe" + p.ID + ": " + p.WaitStopWatch.AverageElapsed);
             }
             Console.WriteLine("Thinking times: ");
             foreach (Philosopher p in philosophers)
             {
-                Console.WriteLine(p.Name + ": " + p.StopWatchTime.Elapsed);
+                Console.WriteLine("Philosophe" + p.ID + ": " + p.WaitStopWatch.Elapsed);
             }
             Console.WriteLine("Eating times: ");
             foreach (Philosopher p in philosophers)
             {
-                Console.WriteLine(p.Name + ": " + p.EatingStopWatch.Elapsed);
+                Console.WriteLine("Philosophe" + p.ID + ": " + p.EatingStopWatch.Elapsed);
             }
         }
     }

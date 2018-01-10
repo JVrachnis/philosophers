@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="averageTimeStopWatch.cs" />
+    <Compile Include="AverageTimeStopWatch.cs" />
     <Compile Include="DinnerTable.cs" />
     <Compile Include="Philosopher.cs" />
     <Compile Include="Program.cs" />
